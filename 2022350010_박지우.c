@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define PROCESS_NUM 5
+#define PROCESS_NUM 3
 #define TIME_QUANTUM 3
 #define MAX_CPU_BURST_TIME 10
 #define MAX_IO_BURST_TIME 5
