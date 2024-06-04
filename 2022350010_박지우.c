@@ -821,6 +821,14 @@ Queue Round_Robin(Process *job_queue, int n) {
             }
         }
 
+        // 시간 퀀텀을 모두 사용한 경우 running -> ready queue
+        if (CPU_busy && time_quantum_remaining <= 0) {
+            push_queue(&ready_queue, running);
+            CPU_busy = 0;
+            time_quantum_remaining = TIME_QUANTUM;
+        }
+
+
         // CPU running 프로세스 -> IO operation
         if (CPU_busy && running.io_burst_time != 0 && running.cpu_burst_time == running.io_start) {
             running.waiting_queue_time = time;
@@ -867,13 +875,6 @@ Queue Round_Robin(Process *job_queue, int n) {
             running.terminate_time = time+1;
             push_queue(&terminated_queue, running);
             time_quantum_remaining = TIME_QUANTUM;  // 새로운 running 프로세스 할당 위해 시간 퀀텀 초기화
-        }
-
-        // 시간 퀀텀을 모두 사용한 경우 running -> ready queue
-        if (CPU_busy && time_quantum_remaining <= 0) {
-            push_queue(&ready_queue, running);
-            CPU_busy = 0;
-            time_quantum_remaining = TIME_QUANTUM;
         }
 
         // waiting queue -> IO
